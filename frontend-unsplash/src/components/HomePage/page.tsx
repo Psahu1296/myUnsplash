@@ -7,6 +7,7 @@ import axios from "axios";
 import Logo from "../../app/assets/ps-logo.png";
 import dynamic from "next/dynamic";
 import Delete from "../Delete";
+import Loader from "../Loader";
 const AddNew = dynamic(() => import("@/components/AddNew"), {
   ssr: false,
 });
@@ -18,6 +19,7 @@ export interface IPhotoData {
 const FrontPage = () => {
   const [PhotoList, setPhotoList] = useState<IPhotoData[]>(IMAGE_DATA);
   const [addPhoto, setAddPhoto] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [deletePhoto, setDeletePhoto] = useState<boolean>(false);
   const [activeImage, setActiveImage] = useState<HTMLDivElement | null>(null);
   const [selectedImage, setSelectedImage] = useState<IPhotoData>();
@@ -74,12 +76,13 @@ const FrontPage = () => {
   });
   return (
     <>
+      <Loader isLoading={isLoading} />
       {addPhoto && (
         <AddNew
           photoFormhandler={photoFormhandler}
           setPhotoList={setPhotoList}
           photoList={PhotoList}
-          
+          setIsLoading={setIsLoading}
         />
       )}
       {deletePhoto && (
@@ -87,6 +90,8 @@ const FrontPage = () => {
           photoFormhandler={photoDeleteHandler}
           setPhotoList={setPhotoList}
           selectedPhoto={selectedImage}
+          photoList={PhotoList}
+          setIsLoading={setIsLoading}
         />
       )}
       <div className="flex flex-col justify-center item-center w-auto p-5">

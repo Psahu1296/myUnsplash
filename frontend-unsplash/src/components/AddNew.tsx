@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { IPhotoData } from "./HomePage/page";
 import { v4 as uuidv4 } from 'uuid';
+import axios from "axios";
 
 
 interface IAddNew {
   photoFormhandler: (args: boolean) => void;
   setPhotoList: (args: IPhotoData[]) => void;
   photoList: IPhotoData[]
+  setIsLoading: (args: boolean) => void;
 }
-const AddNew = ({photoList, photoFormhandler, setPhotoList}: IAddNew) => {
+const AddNew = ({photoList, photoFormhandler, setPhotoList, setIsLoading}: IAddNew) => {
 
   const [form, setForm] = useState<IPhotoData>({id: '', label: '', imageURL: ''});
 
@@ -20,14 +22,26 @@ const AddNew = ({photoList, photoFormhandler, setPhotoList}: IAddNew) => {
     setForm({...form, imageURL: e.target.value});
     }
 
-  const onSubmitHandler = (e: React.FormEvent) => {
+  const onSubmitHandler = async(e: React.FormEvent) => {
     e.preventDefault()
-    const id = uuidv4().toString();
+    setIsLoading(true)
+    try {const id = uuidv4().toString();
     const updateId  = {...form, id}
+    const data = [updateId,...photoList]
+    console.log("response: " , { body: data})
     setPhotoList([updateId,...photoList])
-    photoFormhandler(false)
+    const response = await axios.post("http://localhost:5000/image", {...updateId})
+  
+    setIsLoading(false)
+    photoFormhandler(false)}
+    catch (error) {
+      console.log("mongodb error: ", error);
+      setIsLoading(false)
+      alert("something went wrong")
+    }
+
   }
-console.log(photoList)
+
   return (
     <div className="fixed z-[1000] bg-black-100/25 h-[100vh] w-[100vw] flex justify-center">
       <form className="absolute z-10 w-[620px] rounded-[12px] bg-white flex flex-col top-[20%] p-5" onSubmit={onSubmitHandler}>
