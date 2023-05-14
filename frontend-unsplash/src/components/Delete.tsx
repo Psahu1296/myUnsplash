@@ -6,11 +6,18 @@ interface IDelete {
     photoFormhandler: (args: boolean) => void;
     setPhotoList: (args: IPhotoData[]) => void;
     selectedPhoto: IPhotoData | undefined;
+    photoList: IPhotoData[]
+    setIsLoading: (args: boolean) => void;
   }
-const Delete = ({selectedPhoto, photoFormhandler, setPhotoList}: IDelete) => {
+const Delete = ({selectedPhoto, photoList, photoFormhandler, setPhotoList}: IDelete) => {
+  const deleteHandler = () => {
+    const newPhotoList: IPhotoData[] = photoList.filter((photo) => photo.id !== selectedPhoto?.id)
+    setPhotoList(newPhotoList)
+    photoFormhandler(false)
+  }
   return (
     <div className="fixed z-[1000] bg-black-100/25 h-[100vh] w-[100vw] flex justify-center">
-      <form className="absolute z-10 w-[620px] rounded-[12px] bg-white flex flex-col top-[20%] p-5">
+      <div className="absolute z-10 w-[620px] rounded-[12px] bg-white flex flex-col top-[20%] p-5">
         <label className="text-primary text-[24px] font-[500] mb-[20px]">
           Are you sure?
         </label>
@@ -28,11 +35,11 @@ const Delete = ({selectedPhoto, photoFormhandler, setPhotoList}: IDelete) => {
           }}>
             Cancel
           </button>
-          <button className="min-w-[150px] h-[55px] text-white rounded-[12px] bg-red active:scale-[0.95] ml-3">
+          <button className="min-w-[150px] h-[55px] text-white rounded-[12px] bg-red active:scale-[0.95] ml-3" onClick={deleteHandler}>
             Delete
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
