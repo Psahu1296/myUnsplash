@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IPhotoData } from "./HomePage/page";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
@@ -31,7 +31,6 @@ const AddNew = ({photoList, photoFormhandler, setPhotoList, setIsLoading}: IAddN
     console.log("response: " , { body: data})
     setPhotoList([updateId,...photoList])
     const response = await axios.post("http://localhost:5000/image", {...updateId})
-  
     setIsLoading(false)
     photoFormhandler(false)}
     catch (error) {
@@ -39,7 +38,6 @@ const AddNew = ({photoList, photoFormhandler, setPhotoList, setIsLoading}: IAddN
       setIsLoading(false)
       alert("something went wrong")
     }
-
   }
 
   return (
@@ -63,7 +61,7 @@ const AddNew = ({photoList, photoFormhandler, setPhotoList, setIsLoading}: IAddN
         </label>
         <input
           type="text"
-          className="w-[100%] h-[55px] rounded-[12px] border-[1px] border-tertiary outline-none pl-3 text-primary focus:border-green mb-[25px]"
+          className="w-[100%] h-[55px] rounded-[12px] border-[1px] border-tertiary outline-none px-3 text-primary focus:border-green mb-[25px] text-ellipsis overflow-hidden"
           value={form.imageURL}
           onChange={addPhtoHandler}
         />

@@ -5,7 +5,8 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 const app = express();
-
+const URl = process.env.MONGO_DB_URL
+console.log(URl)
 const PORT = 5000;
 app.use(cors({
     origin: "*",
@@ -13,7 +14,7 @@ app.use(cors({
 }))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-mongoose.connect(process.env.MONGO_DB_URL, {
+mongoose.connect(URl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -26,14 +27,14 @@ const imageSchema = new mongoose.Schema({
 
 const Photos = new mongoose.model("Photos", imageSchema);
 
-app.get("/", (req, res) => {
-  Photos.find({}, (err, found) => {
-    if (!err) {
-      res.send(found);
-    }
-    console.log(err);
-    res.send("Some error occured!");
-  }).catch((err) => console.log("Error occured, " + err));
+app.get("/", async(req, res) => {
+  try{
+    const pic = await Photos.find({})
+    res.status(200).send(pic);
+  }
+  catch(err) {
+    res.status(401).send({message: err.message});
+  }
 });
 
 
@@ -46,8 +47,14 @@ app.post("/image", (req, res) => {
   });
 
   pic.save().then(
-    () => console.log("One entry added"),
-    (err) => console.log(err)
+    () => {
+      console.log("One entry added")
+      res.status(201).send({message: "One entry added"})
+    },
+    (err) => {
+      console.log(err)
+      res.status(402).send({message: "Failed to add entry"})
+    }
   );
 });
 

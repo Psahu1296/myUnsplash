@@ -12,14 +12,14 @@ const AddNew = dynamic(() => import("@/components/AddNew"), {
   ssr: false,
 });
 export interface IPhotoData {
-  id: string
+  id: string;
   label: string;
   imageURL: string;
 }
 const FrontPage = () => {
   const [PhotoList, setPhotoList] = useState<IPhotoData[]>(IMAGE_DATA);
   const [addPhoto, setAddPhoto] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [deletePhoto, setDeletePhoto] = useState<boolean>(false);
   const [activeImage, setActiveImage] = useState<HTMLDivElement | null>(null);
   const [selectedImage, setSelectedImage] = useState<IPhotoData>();
@@ -74,6 +74,17 @@ const FrontPage = () => {
       });
     };
   });
+  useEffect(() => {
+    "use client";
+    axios
+      .get("http://localhost:5000")
+      .then((response) => {
+        setPhotoList(response.data);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
+  }, []);
+
   return (
     <>
       <Loader isLoading={isLoading} />
@@ -94,7 +105,7 @@ const FrontPage = () => {
           setIsLoading={setIsLoading}
         />
       )}
-      <div className="flex flex-col justify-center item-center w-auto p-5">
+      <div className="w-full flex flex-col justify-center item-center w-auto p-5">
         <div className="w-[100%] h-[55px] flex justify-between">
           <div className="w-150 h-auto flex items-center">
             <Image src={Logo} alt="logo" width={56} height={32} />
@@ -134,8 +145,8 @@ const FrontPage = () => {
                     ref={buttonRef}
                     className="hidden absolute top-[18px] right-[18px] text-red font-[500] text-[10px] rounded-[12px] bg-none border-[1px] border-red active:scale-[0.95] px-[15px] py-[5px]"
                     onClick={() => {
-                      setDeletePhoto(true)
-                      setSelectedImage(images)
+                      setDeletePhoto(true);
+                      setSelectedImage(images);
                     }}
                   >
                     delete
