@@ -13,7 +13,7 @@ interface IDelete {
 const Delete = ({selectedPhoto, photoList, photoFormhandler, setPhotoList}: IDelete) => {
   const deleteHandler = async() => {
     try{const newPhotoList: any[] = photoList.filter((photo) => photo._id !== selectedPhoto?._id)
-    await axios.post("http://localhost:5000/delete", {id: selectedPhoto?.id})
+    await axios.post("https://my-unsplash-nx9e.onrender.com/delete", {id: selectedPhoto?.id})
     setPhotoList(newPhotoList)
     photoFormhandler(false)}catch(e){console.log("delete=====>", e)}
   }

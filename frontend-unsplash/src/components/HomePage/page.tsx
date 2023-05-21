@@ -88,7 +88,7 @@ const SearchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
   useEffect(() => {
     "use client";
     axios
-      .get("http://localhost:5000")
+      .get("https://my-unsplash-nx9e.onrender.com")
       .then((response) => {
         setPhotoList(response.data);
         setOriginalPhotoList(response.data);

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { IPhotoData } from "./HomePage/page";
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 interface IAddNew {
@@ -37,7 +36,7 @@ const AddNew = ({
       const updateId = { ...form, date };
       const data = [updateId, ...photoList];
       setPhotoList([updateId, ...photoList]);
-      const response = await axios.post("http://localhost:5000/image", {
+      const response = await axios.post("https://my-unsplash-nx9e.onrender.com/image", {
         ...updateId,
       });
     } catch (error) {
