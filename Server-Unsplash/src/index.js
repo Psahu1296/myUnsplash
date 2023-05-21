@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 
 const app = express();
 const URl = process.env.MONGO_DB_URL;
-console.log(URl);
 const PORT = 5000;
 app.use(
   cors({
