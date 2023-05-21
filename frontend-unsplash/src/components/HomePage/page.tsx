@@ -12,12 +12,13 @@ const AddNew = dynamic(() => import("@/components/AddNew"), {
   ssr: false,
 });
 export interface IPhotoData {
-  id: string;
   label: string;
   imageURL: string;
+  date: Date | null;
 }
 const FrontPage = () => {
   const [PhotoList, setPhotoList] = useState<IPhotoData[]>(IMAGE_DATA);
+  const [OriginalPhotoList, setOriginalPhotoList] = useState<IPhotoData[]>(IMAGE_DATA);
   const [addPhoto, setAddPhoto] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [deletePhoto, setDeletePhoto] = useState<boolean>(false);
@@ -60,6 +61,16 @@ const FrontPage = () => {
     }
   };
 
+const SearchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const search = e.target.value.trim()
+  if(search) {
+    const filtered = OriginalPhotoList.filter((item) => item.label.toLowerCase().includes(search));
+    setPhotoList(filtered)
+    return 
+  }
+  setPhotoList(OriginalPhotoList)
+}
+
   useEffect(() => {
     const images = document.querySelectorAll(`[data-key="image-container"]`);
     images.forEach((image) => {
@@ -80,6 +91,7 @@ const FrontPage = () => {
       .get("http://localhost:5000")
       .then((response) => {
         setPhotoList(response.data);
+        setOriginalPhotoList(response.data);
       })
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
@@ -120,6 +132,7 @@ const FrontPage = () => {
             <input
               type="text"
               className="w-[300px] h-[55px] rounded-[12px] border-[1px] border-tertiary outline-none pl-3 text-primary focus:border-green"
+              onChange={SearchHandler}
             />
           </div>
           <button
